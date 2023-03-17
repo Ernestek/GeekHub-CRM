@@ -9,10 +9,25 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+from pathlib import Path
 
 
+# # Build paths inside the project like this: BASE_DIR / 'subdir'.
+# BASE_DIR = Path(__file__).resolve().parent.parent
+#
+#
+# # Quick-start development settings - unsuitable for production
+# # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+#
+# # SECURITY WARNING: keep the secret key used in production secret!
+# SECRET_KEY = 'django-insecure-6s(u054(^_oezib*f48jb&u%li!@xtuxnhf=ly3z127%i^@lqe'
+#
+# # SECURITY WARNING: don't run with debug turned on in production!
+# DEBUG = True
+#
+# ALLOWED_HOSTS = []
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     from pathlib import Path
 
@@ -31,8 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'CRM_APP.apps.CrmAppConfig',
+
     'rest_framework',
 
+    'account',
+    'common',
 ]
 
 MIDDLEWARE = [
