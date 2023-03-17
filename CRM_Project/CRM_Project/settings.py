@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     from pathlib import Path
 
