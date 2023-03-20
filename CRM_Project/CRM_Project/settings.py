@@ -12,20 +12,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 
 
-# # Build paths inside the project like this: BASE_DIR / 'subdir'.
-# BASE_DIR = Path(__file__).resolve().parent.parent
-#
-#
-# # Quick-start development settings - unsuitable for production
-# # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-#
-# # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-6s(u054(^_oezib*f48jb&u%li!@xtuxnhf=ly3z127%i^@lqe'
-#
-# # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
-#
-# ALLOWED_HOSTS = []
 try:
     from .local_settings import *
 except ImportError:
@@ -48,6 +34,8 @@ INSTALLED_APPS = [
     'CRM_APP.apps.CrmAppConfig',
 
     'rest_framework',
+    'rest_framework.authtoken',
+    'drf_spectacular',
 
     'account',
     'common',
@@ -136,3 +124,22 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# DRF Settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+# Redis connections
+
+REDIS_HOST = '0.0.0.0'
+REDIS_PORT = '6379'
+
+# Celery Settings
+
+CELERY_TASK_TRACK_STARTED = True
