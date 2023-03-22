@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+from pathlib import Path
 
 
 try:
@@ -22,6 +23,8 @@ except ImportError:
     ALLOWED_HOSTS = []
 
 # Application definition
+AUTH_USER_MODEL = 'account.User'
+BASE_URL = 'http://localhost:8000/'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -31,8 +34,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'CRM_APP.apps.CrmAppConfig',
-    'rest_framework',
 
+    'rest_framework',
+    'rest_framework.authtoken',
+    'drf_spectacular',
+
+    'account.apps.AccountConfig',
+    'common.apps.CommonConfig',
 ]
 
 MIDDLEWARE = [
@@ -118,3 +126,39 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# DRF Settings
+
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ]
+}
+
+# Redis connections
+
+REDIS_HOST = '0.0.0.0'
+REDIS_PORT = '6379'
+
+# Celery Settings
+
+# CELERY_BROKER_URL = f'{env("REDIS_URL")}/1'
+# CELERY_BROKER_URL = 'redis://redis:6379'
+# CELERY_REDIS_RETRY_ON_TIMEOUT = True
+# CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Google SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'iernestek@gmail.com'
+EMAIL_HOST_PASSWORD = 'lcfsepteoyzboyxo'
+EMAIL_PORT = 587
+
+DEFAULT_FROM_EMAIL = 'testmail@gmail.com'
