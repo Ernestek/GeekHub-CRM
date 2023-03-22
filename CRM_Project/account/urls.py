@@ -3,14 +3,13 @@ from django.urls import include
 from rest_framework.routers import DefaultRouter
 from rest_framework.authtoken.views import obtain_auth_token
 
-# from account.views import AuthenticationView
+from .views import LoginView
 
 app_name = 'account'
 
 router = DefaultRouter()
 
 urlpatterns = [
-    path('api-token-auth/', obtain_auth_token, name='api-token-auth'),
-    # path('auth', AuthenticationView.as_view())
-    # path('', include(router.urls)),
+    path('login/', LoginView.as_view(), name='login'),
+    # path('api-token-auth/', obtain_auth_token, name='api-token-auth'),
 ]
