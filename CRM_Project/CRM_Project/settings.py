@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-from pathlib import Path
 
 
 try:
@@ -33,14 +32,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'CRM_APP.apps.CrmAppConfig',
-
+    # installed modules
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-
-    'account.apps.AccountConfig',
+    'phonenumber_field',
+    # applications
     'common.apps.CommonConfig',
+    'account.apps.AccountConfig',
+    'partners.apps.PartnersConfig',
+    'projects.apps.ProjectsConfig',
+    'tasks.apps.TasksConfig'
+
 ]
 
 MIDDLEWARE = [
@@ -110,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EET'
 
 USE_I18N = True
 
