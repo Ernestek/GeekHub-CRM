@@ -9,7 +9,9 @@ class PartnerSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PartnerContactPersonSerializer(serializers.Serializer):
+class PartnerContactPersonSerializer(serializers.ModelSerializer):
+    partner_name = serializers.CharField(source='partner.name', allow_null=True)
+
     class Meta:
         model = PartnerContactPerson
         fields = '__all__'

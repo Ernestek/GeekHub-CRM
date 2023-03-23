@@ -1,5 +1,5 @@
 from django.shortcuts import render
 
 
-class ProjectViewSet:
+class TasksViewSet:
     pass

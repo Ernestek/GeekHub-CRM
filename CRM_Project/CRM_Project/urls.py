@@ -18,17 +18,18 @@ from django.urls import path, include
 
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
-api = [
-    path('', include('account.urls')),
-]
+# api = [
+#     path('', include('account.urls')),
+# ]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api/account', include('account.urls', namespace='account')),
-    path('api/projects/', include('projects.urls', namespace='projects')),
+    path('api/account/', include('account.urls'), namespace='account'),
+    # path('api/', include(api)),
     path('api/partners/', include('partners.urls', namespace='partners')),
-    # path('api/tasks', include('tasks.urls', namespace='tasks')),
-    path('api/', include(api)),
+    path('api/projects/', include('projects.urls', namespace='projects')),
+    path('api/tasks/', include('tasks.urls', namespace='tasks')),
+
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),

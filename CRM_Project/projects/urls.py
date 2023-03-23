@@ -1,16 +1,14 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from partners.views import PartnerViewSet, PartnerContactPersonViewSet
+from projects.views import ProjectViewSet
 
 app_name = 'projects'
 
-# partners_router = routers.DefaultRouter()
-router = routers.DefaultRouter()
-router.register('', PartnerViewSet)
+projects_router = routers.DefaultRouter()
+projects_router.register('', ProjectViewSet)
 
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
-
+    path('', include(projects_router.urls)),
 ]

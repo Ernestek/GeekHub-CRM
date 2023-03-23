@@ -32,13 +32,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    # installed modules
     'rest_framework',
     'rest_framework.authtoken',
     'drf_spectacular',
-
-    'partners.apps.PartnersConfig',
+    'phonenumber_field',
+    # applications
     'common.apps.CommonConfig',
+    'account.apps.AccountConfig',
+    'partners.apps.PartnersConfig',
+    'projects.apps.ProjectsConfig',
+    'tasks.apps.TasksConfig'
 
 ]
 

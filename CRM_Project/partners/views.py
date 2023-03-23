@@ -15,9 +15,3 @@ class PartnerContactPersonViewSet(ModelViewSet):
     queryset = PartnerContactPerson.objects.all()
     # permission_classes = [IsAuthenticated]
     serializer_class = PartnerContactPersonSerializer
-
-    def create(self, request, *args, **kwargs):
-        data = request.data
-        PartnerContactPerson.objects.create(
-            data
-        )
