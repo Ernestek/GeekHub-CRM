@@ -8,3 +8,4 @@ class RequestPasswordResetSerializer(serializers.Serializer):
     confirm_password = serializers.CharField(write_only=True, validators=[validate_password])
 
     def validate(self, attrs):
+        pass
