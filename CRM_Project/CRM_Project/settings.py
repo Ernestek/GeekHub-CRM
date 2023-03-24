@@ -22,8 +22,9 @@ except ImportError:
     ALLOWED_HOSTS = []
 
 # Application definition
-AUTH_USER_MODEL = 'account.User'
+
 BASE_URL = 'http://localhost:8000/'
+AUTH_USER_MODEL = 'account.User'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -38,13 +39,14 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'phonenumber_field',
     # applications
-    'common.apps.CommonConfig',
     'account.apps.AccountConfig',
+    'common.apps.CommonConfig',
     'partners.apps.PartnersConfig',
     'projects.apps.ProjectsConfig',
     'tasks.apps.TasksConfig'
 
 ]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -165,3 +167,8 @@ EMAIL_HOST_PASSWORD = 'lcfsepteoyzboyxo'
 EMAIL_PORT = 587
 
 DEFAULT_FROM_EMAIL = 'testmail@gmail.com'
+
+PASSWORD_RESET_TIMEOUT = 60*60*24
+
+FRONTEND_HOST = 'http://127.0.0.1:8000'
+FRONTEND_PASSWORD_RESET_PATH = '/password-reset-confirm/{uid}/{token}'

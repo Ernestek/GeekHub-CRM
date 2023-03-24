@@ -1,7 +1,8 @@
 from django.contrib.auth import authenticate
 from django.core.mail import send_mail
 from django.conf import settings
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiResponse
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -12,7 +13,12 @@ from rest_framework.authtoken.views import ObtainAuthToken
 
 
 @extend_schema(
-    tags=['Login'],
+    tags=('Account',),
+    description='',
+    request={
+        200: OpenApiResponse(description='User authenticated and will receive a token '),
+        400: OpenApiResponse(description='Invalid credentials')
+    }
 )
 class LoginView(ObtainAuthToken):
     permission_classes = [AllowAny]
@@ -28,7 +34,7 @@ class LoginView(ObtainAuthToken):
         elif not user.password_changed:
             return Response({'message': 'password not changed'})
         else:
-            return Response({'error': 'Invalid credentials'}, status=400)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, *args, **kwargs):
         ...

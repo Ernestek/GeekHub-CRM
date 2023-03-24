@@ -4,4 +4,4 @@ drf-spectacular==0.25.1
 # django-extensions==3.2.1
 # django-debug-toolbar==3.8.1
 celery[redis]==5.2.7
-phonenumberslite==8.13.7
+django-phonenumber-field[phonenumberslite]==7.0.2

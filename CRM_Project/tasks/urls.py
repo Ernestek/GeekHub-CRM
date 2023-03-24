@@ -5,10 +5,10 @@ from tasks.views import TasksViewSet
 
 app_name = 'tasks'
 
-tasks_router = routers.DefaultRouter()
-tasks_router.register('', TasksViewSet)
+# tasks_router = routers.DefaultRouter()
+# tasks_router.register('', TasksViewSet)
 
 
 urlpatterns = [
-    path('', include(tasks_router.urls)),
+    # path('', include(tasks_router.urls)),
 ]
