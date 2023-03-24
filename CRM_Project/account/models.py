@@ -46,6 +46,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return the short name for the user."""
         return self.first_name
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
+from .tasks import send_mail_for_registered_user
+
+
+# TODO: find a normal place for signal to send letter
+@receiver(post_save, sender=User)
+def send_notification_on_user_create(sender, instance, created, **kwargs):
+    if created and not instance.is_superuser:
+        send_mail_for_registered_user.delay(user=str(instance))
 
 
