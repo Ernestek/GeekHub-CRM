@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import environ
+
 
 try:
     from .local_settings import *
@@ -22,6 +24,10 @@ except ImportError:
     ALLOWED_HOSTS = []
 
 # Application definition
+env = environ.Env()
+ENV_FILE_PATH = BASE_DIR / '.env'
+if ENV_FILE_PATH.exists():
+    environ.Env.read_env(env_file=str(ENV_FILE_PATH))
 
 BASE_URL = 'http://localhost:8000/'
 AUTH_USER_MODEL = 'account.User'
@@ -38,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_spectacular',
     'phonenumber_field',
+    'debug_toolbar',
     # applications
     'account.apps.AccountConfig',
     'common.apps.CommonConfig',
@@ -56,6 +63,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'CRM_Project.urls'
@@ -89,6 +98,18 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': env('POSTGRES_DB'),
+#         'USER': env('POSTGRES_USER'),
+#         'PASSWORD': env('POSTGRES_PASSWORD'),
+#         'HOST': env('POSTGRES_HOST'),
+#         'PORT': env.int('POSTGRES_PORT'),
+#     }
+# }
+
 
 
 # Password validation
@@ -136,13 +157,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
     ]
 }
-
+# TOKEN_MODEL = Token
 # Redis connections
 
 REDIS_HOST = '0.0.0.0'
@@ -172,3 +194,8 @@ PASSWORD_RESET_TIMEOUT = 60*60*24
 
 FRONTEND_HOST = 'http://127.0.0.1:8000'
 FRONTEND_PASSWORD_RESET_PATH = '/password-reset-confirm/{uid}/{token}'
+
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ['127.0.0.1', '10.0.2.2']

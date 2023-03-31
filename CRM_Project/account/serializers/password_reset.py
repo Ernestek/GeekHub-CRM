@@ -8,7 +8,7 @@ from account.utils import decode_uid
 
 
 class RequestPasswordResetSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(write_only=True)
 
 
 class ConfirmPasswordResetSerializer(serializers.Serializer):

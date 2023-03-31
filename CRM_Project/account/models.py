@@ -1,10 +1,11 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
-from .managers import UserManager
+from account.managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -22,7 +23,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('staff status'), default=False)
     password_changed = models.BooleanField(_('password changed'), default=False)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-
+    phone_number = PhoneNumberField(_('phone number'), null=True, blank=True)
+    phone_number2 = PhoneNumberField(_('phone number 2'), null=True, blank=True)
+    phone_number3 = PhoneNumberField(_('phone number 3'), null=True, blank=True)
+    
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
@@ -49,13 +53,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from .tasks import send_mail_for_registered_user
+from account.tasks import send_mail_for_registered_user
 
 
-# TODO: find a normal place for signal to send letter
 @receiver(post_save, sender=User)
 def send_notification_on_user_create(sender, instance, created, **kwargs):
     if created and not instance.is_superuser:
-        send_mail_for_registered_user.delay(user=str(instance))
-
+        print(instance.id)
+        transaction.on_commit(lambda: send_mail_for_registered_user.delay(user_email=instance.email))
 
