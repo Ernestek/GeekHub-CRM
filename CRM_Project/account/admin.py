@@ -13,9 +13,10 @@ class UserAdmin(_UserAdmin):
     list_filter = ('first_name', 'last_name', 'is_staff',)
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
-        (_('Personal info'), {'fields': ('first_name', 'last_name')}),
+        (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone_number',)}),
         (_('Permissions'), {'fields': ('is_superuser', 'is_active',
-                                       'is_staff', 'password_changed',)}),
+                                       'is_staff', 'password_changed',
+                                       )}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined',)}),
     )
 
@@ -30,12 +31,11 @@ class UserAdmin(_UserAdmin):
     filter_horizontal = ()
 
     # def save_model(self, request, obj, form, change):
-    #     print(request.)
-    #     if request.method == 'CREATE':
-    #         password = User.objects.make_random_password()
-    #         super(UserAdmin, self).save_model(request, obj, form, change)
-    #         print(password)
-    #         obj.set_password(password)
-    #         message_for_registered_user(
-    #             obj, password, '123'
-    #         )
+    #     print(request)
+    #     password = User.objects.make_random_password()
+    #     super(UserAdmin, self).save_model(request, obj, form, change)
+    #     print(password)
+    #     obj.set_password(password)
+    #     # message_for_registered_user(
+    #     #     obj, password, '123'
+    #     # )

@@ -10,7 +10,7 @@ from account.tasks import send_email_for_password_reset
 
 
 @extend_schema(
-    tags=['Account'],
+    tags=('Account',),
     description='Request password reset.',
     responses={
         204: OpenApiResponse(description='User will receive link if account exists.'),
@@ -30,7 +30,7 @@ class PasswordResetRequestView(CreateAPIView):
         try:
             user = user_model.objects.get(email__iexact=serializer.data['email'])
 
-            if user.is_active:
+            if user.is_active and user.password_changed:
                 send_email_for_password_reset.apply_async(args=(user.pk,))
                 return Response(status=status.HTTP_204_NO_CONTENT)
             else:
@@ -41,14 +41,13 @@ class PasswordResetRequestView(CreateAPIView):
 
 
 @extend_schema(
-    tags=['Account'],
+    tags=('Account',),
     description='Check uid and token and set new password',
     responses={
         204: OpenApiResponse(description='Password was set.'),
     }
 )
 class PasswordResetConfirmView(CreateAPIView):
-    # TODO: add field confirm password, maybe another method
     serializer_class = ConfirmPasswordResetSerializer
     authentication_classes = []
     permission_classes = (AllowAny,)
