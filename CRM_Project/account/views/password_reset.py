@@ -26,7 +26,6 @@ class PasswordResetRequestView(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user_model = get_user_model()
-
         try:
             user = user_model.objects.get(email__iexact=serializer.data['email'])
 

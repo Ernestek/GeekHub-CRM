@@ -8,7 +8,8 @@ User = get_user_model()
 
 class SetNewPasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only=True, style={'input_type': 'password'})
-    new_password = serializers.CharField(write_only=True, style={'input_type': 'password'}, validators=[validate_password])
+    new_password = serializers.CharField(write_only=True, style={'input_type': 'password'},
+                                         validators=[validate_password])
 
     def validate_old_password(self, value):
         user = self.context['request'].user

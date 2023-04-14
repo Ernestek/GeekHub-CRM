@@ -1,11 +1,15 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from account.managers import UserManager
+from account.tasks import send_mail_for_registered_user
+from common.validators import validate_name
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -17,16 +21,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True)
 
-    first_name = models.CharField(_('first name'), max_length=150, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    first_name = models.CharField(_('first name'), max_length=150, validators=[validate_name], default='user_name')
+    last_name = models.CharField(_('last name'), max_length=150, validators=[validate_name], default='user_last_name')
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     password_changed = models.BooleanField(_('password changed'), default=False)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    phone_number = PhoneNumberField(_('phone number'), null=True, blank=True)
+    phone_number = PhoneNumberField(_('phone number'), null=True, blank=True,)
     phone_number2 = PhoneNumberField(_('phone number 2'), null=True, blank=True)
     phone_number3 = PhoneNumberField(_('phone number 3'), null=True, blank=True)
-    
+
+    profile_image = models.ImageField(default='default.jpg', blank=True,)
+
     class Meta:
         verbose_name = _("user")
         verbose_name_plural = _("users")
@@ -50,15 +56,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return the short name for the user."""
         return self.first_name
 
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-from account.tasks import send_mail_for_registered_user
-
 
 @receiver(post_save, sender=User)
 def send_notification_on_user_create(sender, instance, created, **kwargs):
     if created and not instance.is_superuser:
-        print(instance.id)
         transaction.on_commit(lambda: send_mail_for_registered_user.delay(user_email=instance.email))
 
