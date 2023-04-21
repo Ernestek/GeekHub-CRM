@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 
 import environ
 
@@ -32,6 +33,10 @@ if ENV_FILE_PATH.exists():
 BASE_URL = 'http://localhost:8000/'
 AUTH_USER_MODEL = 'account.User'
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
+MEDIA_URL = '/images/'
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'drf_spectacular',
     'phonenumber_field',
+    'django_filters',
     'debug_toolbar',
     # applications
     'account.apps.AccountConfig',
@@ -102,11 +108,11 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': env('POSTGRES_DB'),
-#         'USER': env('POSTGRES_USER'),
-#         'PASSWORD': env('POSTGRES_PASSWORD'),
-#         'HOST': env('POSTGRES_HOST'),
-#         'PORT': env.int('POSTGRES_PORT'),
+#         'NAME': 'crm',
+#         'USER': 'admin',
+#         'PASSWORD': 'admin',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
 #     }
 # }
 
@@ -162,7 +168,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+
 }
 # TOKEN_MODEL = Token
 # Redis connections
