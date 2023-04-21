@@ -17,7 +17,7 @@ def send_mail_for_registered_user(user_email):
     user_model = get_user_model()
     user = user_model.objects.only('email').get(email=user_email)
     password = user_model.objects.make_random_password()
-    url = urljoin(settings.BASE_URL, '')
+    url = urljoin(settings.URL, 'api/account/login/')
     user.set_password(password)
     user.save()
     send_mail(
@@ -47,4 +47,3 @@ def send_email_for_password_reset(user_id: int):
     title = 'Reset password'
     message = f'Link to set a new password {link}'
     send_mail(title, message, settings.EMAIL_HOST_USER, (user.email,), fail_silently=False)
-    # print(link, flush=True)

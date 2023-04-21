@@ -13,7 +13,7 @@ class UserAdmin(_UserAdmin):
     list_display_links = ('id', 'email',)
     list_filter = ('first_name', 'last_name', 'is_staff',)
     fieldsets = (
-        (None, {'fields': ('profile_image', 'email', 'password',)}),
+        (None, {'fields': ('email', 'password',)}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'phone_number',
                                          'phone_number2', 'phone_number3',)}),
         (_('Permissions'), {'fields': ('is_superuser', 'is_active',

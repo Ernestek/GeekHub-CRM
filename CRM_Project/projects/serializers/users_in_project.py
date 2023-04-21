@@ -4,7 +4,7 @@ from rest_framework import serializers
 User = get_user_model()
 
 
-class UserSearchSerializer(serializers.ModelSerializer):
+class UsersShortInfoSerializers(serializers.ModelSerializer):
     full_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -12,6 +12,8 @@ class UserSearchSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'full_name',
+            'email',
+            'phone_number',
         )
 
     def get_full_name(self, obj: User) -> str:
