@@ -3,7 +3,6 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import mixins, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
-from django.utils.translation import gettext_lazy as _
 
 from common.permissions import TemporaryPasswordChanged, IsStaffOrAssigned, IsStaff
 from tasks.serializers.user_task import UserTaskCreateSerializer, UserTasksListSerializer, \
@@ -27,7 +26,6 @@ from tasks.models import UserTask
             location='query',
             required=False,
             type=str,
-            # description=''
             enum=['created_at', '-created_at']
         ),
     ],
@@ -43,7 +41,6 @@ class UserTaskListViewSet(mixins.ListModelMixin,
     ordering_description = 'Ordering by field updated_at'
     filterset_fields = ['status']
 
-    # TODO: empty task list or not found user
     def get_queryset(self):
         queryset = super().get_queryset()
         user_id = self.request.query_params.get('user_id', None)
@@ -95,72 +92,3 @@ class MyTaskCreateViewSet(mixins.CreateModelMixin,
     queryset = UserTask.objects.select_related('user', 'user_assigned')
     permission_classes = (IsAuthenticated, TemporaryPasswordChanged,)
     serializer_class = MyTaskCreateSerializer
-
-
-# @extend_schema(
-#     tags=('MyTasks',),
-#     description='Get a list of user tasks.'
-# )
-# class MyTaskViewSet(ModelViewSet):
-#     queryset = UserTask.objects.select_related('user')
-#     permission_classes = (IsAuthenticated, TemporaryPasswordChanged,)
-#     serializer_class = UserTasksListSerializer
-#     filter_backends = (filters.OrderingFilter,)
-#     ordering_fields = ('updated_at', 'status',)
-#     ordering_description = _('Ordering by field updated_at')
-#
-#     def get_serializer_class(self):
-#         if self.action == 'retrieve':
-#             return MyTasksRetrieveSerializer
-#         if self.action == 'update':
-#             return MyTasksUpdateSerializer
-#         if self.action == 'create':
-#             return MyTaskCreateSerializer
-#         return MyTasksListSerializer
-#
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#         user_id = self.request.user.id
-#         return queryset.filter(user_id=user_id)
-
-#
-# @extend_schema(
-#     tags=('UserTasks',),
-#     parameters=[
-#         OpenApiParameter(
-#             name='user_id',
-#             location='query',
-#             required=False,
-#             type=int,
-#             description='If the user_id field is empty, we will get information on the authorized user,'
-#                         'else get information about the user whose ID was entered.'
-#         ),
-#     ],
-#     description='Get a list of user tasks.'
-# )
-# class UserTaskListRetrieveViewSet(ReadOnlyModelViewSet):
-#     queryset = UserTask.objects.select_related('user')
-#     permission_classes = (IsAuthenticated, TemporaryPasswordChanged,)
-#     serializer_class = UserTasksListSerializer
-#     filter_backends = (filters.OrderingFilter,)
-#     ordering_fields = ['created_at']
-#     ordering_description = _('Ordering by field created_at')
-#     # search_fields = ['user__id', 'user__email']
-#
-#     def get_serializer_class(self):
-#         if self.action == 'retrieve':
-#             return UserTasksRetrieveSerializer
-#         return UserTasksListSerializer
-#
-#     def get_queryset(self):
-#         queryset = super().get_queryset()
-#
-#         # try:
-#         #     user = self.kwargs['user_id']
-#         # except KeyError:
-#         #     user = self.request.user
-#         user_id = self.request.query_params.get('user_id', None)
-#         if user_id is None:
-#             user_id = self.request.user.id
-#
-#         return queryset.filter(user_id=user_id)

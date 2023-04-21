@@ -21,8 +21,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True)
 
-    first_name = models.CharField(_('first name'), max_length=150, validators=[validate_name], default='user_name')
-    last_name = models.CharField(_('last name'), max_length=150, validators=[validate_name], default='user_last_name')
+    first_name = models.CharField(_('first name'), max_length=150, validators=[validate_name], default='user name')
+    last_name = models.CharField(_('last name'), max_length=150, validators=[validate_name], default='user last name')
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     password_changed = models.BooleanField(_('password changed'), default=False)
@@ -56,9 +56,4 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return the short name for the user."""
         return self.first_name
 
-
-@receiver(post_save, sender=User)
-def send_notification_on_user_create(sender, instance, created, **kwargs):
-    if created and not instance.is_superuser:
-        transaction.on_commit(lambda: send_mail_for_registered_user.delay(user_email=instance.email))
 
