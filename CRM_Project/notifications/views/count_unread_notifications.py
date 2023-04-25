@@ -1,9 +1,6 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from common.permissions import TemporaryPasswordChanged
 from notifications.models import Notification
@@ -19,4 +16,5 @@ class UnreadNotificationCountAPIView(RetrieveAPIView):
     permission_classes = (IsAuthenticated, TemporaryPasswordChanged)
 
     def get_object(self):
-        return {'count': Notification.objects.prefetch_related('user').filter(user=self.request.user, status=False).count()}
+        count = Notification.objects.prefetch_related('user').filter(user=self.request.user, read=False).count()
+        return {'count': count}

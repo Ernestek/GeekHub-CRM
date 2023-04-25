@@ -35,7 +35,6 @@ class ProjectRetrieveSerializer(serializers.ModelSerializer):
 
 class ProjectCreateSerializer(serializers.ModelSerializer):
     owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    # users = serializers.CharField(source='user.id')
 
     class Meta:
         model = Project

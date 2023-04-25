@@ -31,7 +31,7 @@ class ProjectViewSet(ModelViewSet):
             queryset = queryset.prefetch_related('users')
             queryset = queryset.filter(
                 Q(owner=self.request.user) | Q(users=self.request.user)
-            )
+            ).distinct()
         elif self.action == 'list':
             queryset = queryset.filter(
                 Q(owner=self.request.user) | Q(users=self.request.user)

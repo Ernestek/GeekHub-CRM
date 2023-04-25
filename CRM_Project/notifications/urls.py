@@ -1,16 +1,16 @@
-from django.urls import path, include
-from rest_framework import routers
+from django.urls import path
 
-from notifications.views.base_notifications import UnreadNotificationCountAPIView
-from notifications.views.tasks_notifications import NotificationsListView
+from notifications.views.count_unread_notifications import UnreadNotificationCountAPIView
+from notifications.views.user_notifications import NotificationsListView, NotificationsUpdateStatusView, \
+    NotificationDeleteView
 
 app_name = 'notifications'
 
-tasks_router = routers.SimpleRouter()
-
 
 urlpatterns = [
-    path('user-count-unread-notifications', UnreadNotificationCountAPIView.as_view(), name='count-unread-notifications'),
+    path('user-notidications-change-status', NotificationsUpdateStatusView.as_view(), name='status'),
+    path('user-notifications-count-unread', UnreadNotificationCountAPIView.as_view(), name='count-unread-notifications'),
     path('user-notifications/', NotificationsListView.as_view(), name='user-notifications'),
-    path('', include(tasks_router.urls)),
+    path('user-notifications/<int:id>/', NotificationDeleteView.as_view(), name='delete-notification'),
 ]
+

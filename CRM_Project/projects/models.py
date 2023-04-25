@@ -11,8 +11,7 @@ User = get_user_model()
 
 class Project(BaseModel):
     name = models.CharField(_('name'), max_length=100)
-    partner = models.ForeignKey(Partner, on_delete=models.SET_NULL, blank=True, null=True)
-    price = models.DecimalField(_('price'), max_digits=15, decimal_places=2, blank=True, null=True)
+    partner = models.ForeignKey(Partner, on_delete=models.SET_NULL, blank=True, null=True, related_name='project')
     users = models.ManyToManyField(User, blank=True, null=True, related_name='project')
     status = models.CharField(_('status'), max_length=20, choices=ProjectStatus.choices,
                               default=ProjectStatus.in_progress)
