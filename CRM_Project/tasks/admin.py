@@ -14,7 +14,7 @@ class UserTaskAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('title', 'text')}),
         (_('User info'), {'fields': ('user', 'user_assigned',)}),
-        (_('Task info'), {'fields': ('status',)}),
+        (_('Task info'), {'fields': ('status', 'project')}),
     )
 
 

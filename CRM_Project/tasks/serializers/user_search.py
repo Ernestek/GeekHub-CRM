@@ -14,5 +14,5 @@ class UserSearchSerializer(serializers.ModelSerializer):
             'full_name',
         )
 
-    def get_full_name(self, obj):
+    def get_full_name(self, obj: User) -> str:
         return obj.get_full_name()

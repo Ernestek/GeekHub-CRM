@@ -19,8 +19,29 @@ class IsStaffOrAssigned(BasePermission):
 
 class IsStaff(BasePermission):
     """
-    Allows access only to admin users.
+    Allows access only to staff users.
     """
 
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_staff)
+
+
+class IsOwner(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in ['DELETE', 'PUT', 'PATCH'] \
+                and obj.owner == request.user:
+            return True
+        return False
+
+
+class IsOwnerOrInProject(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        if request.method in ['GET'] \
+                and obj.owner == request.user:
+            return True
+        return False
+
+
+class IsMyNotifications(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user

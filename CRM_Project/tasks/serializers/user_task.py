@@ -7,7 +7,7 @@ User = get_user_model()
 
 
 class UserTasksListSerializer(serializers.ModelSerializer):
-    user = serializers.CharField(source='user.id', read_only=True)
+    # user = serializers.CharField(source='user.id', read_only=True)
 
     class Meta:
         model = UserTask
@@ -23,6 +23,7 @@ class UserTasksListSerializer(serializers.ModelSerializer):
 class UserTasksRetrieveSerializer(serializers.ModelSerializer):
     user = serializers.CharField(source='user.email', read_only=True)
     user_assigned = serializers.CharField(source='user.email', read_only=True)
+    # user_assigned = UserSearchSerializer()
 
     class Meta:
         model = UserTask
@@ -83,33 +84,9 @@ class MyTaskCreateSerializer(serializers.ModelSerializer):
 
 
 class UserTasksUpdateSerializer(serializers.ModelSerializer):
-    # user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
 
     class Meta:
         model = UserTask
         fields = (
-            # 'title',
-            # 'text',
             'status',
         )
-    # def validate_user(self, value):
-    #     user = value
-    #     print(user)
-    #
-    # def create(self, validated_data):
-    #     task = validated_data['id']
-    #     task.save()
-    #     return task
-
-
-# class UserTaskSerializer(serializers.ModelSerializer):
-#     user = serializers.CharField(source='user.email')
-#
-#     class Meta:
-#         model = UserTask
-#         fields = ['id', 'title', 'text', 'user']
-
-    # def validate_status(self, value):
-    #     if value not in [status[0] for status in UserTask.TasksStatus.choices]:
-    #         raise serializers.ValidationError("Invalid status")
-    #     return value
