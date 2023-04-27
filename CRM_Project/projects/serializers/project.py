@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 
 from projects.models import Project
 from projects.serializers.users_in_project import UsersShortInfoSerializers
@@ -46,19 +47,32 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
             'summary',
         )
 
+    def validate(self, attrs):
+        if attrs['owner'] in attrs.get('users', []):
+            raise serializers.ValidationError(_('Owner cannot be in the users list.'))
+        return attrs
+
 
 class ProjectUpdateSerializer(serializers.ModelSerializer):
+    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
     # users = serializers.CharField(source='user')
     # users = serializers.IntegerField()
     class Meta:
         model = Project
         fields = (
+            'owner',
             'name',
             'partner',
             'users',
             'status',
             'summary',
         )
+
+    # def validate(self, attrs):
+    #     # проверяем, что владелец не находится в списке пользователей
+    #     if attrs['owner'] in attrs.get('users', []):
+    #         raise serializers.ValidationError(_('Owner cannot be in the users list.'))
+    #     return attrs
 
     # def update(self, instance, validated_data):
     #     instance.name = validated_data.get('name', instance.name)

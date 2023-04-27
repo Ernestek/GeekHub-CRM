@@ -1,11 +1,13 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
+from django.core.exceptions import ValidationError
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from rest_framework.response import Response
 
 from account.managers import UserManager
 from account.tasks import send_mail_for_registered_user
@@ -27,11 +29,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('staff status'), default=False)
     password_changed = models.BooleanField(_('password changed'), default=False)
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
-    phone_number = PhoneNumberField(_('phone number'), null=True, blank=True,)
+    phone_number = PhoneNumberField(_('phone number'), null=True, blank=True, )
     phone_number2 = PhoneNumberField(_('phone number 2'), null=True, blank=True)
     phone_number3 = PhoneNumberField(_('phone number 3'), null=True, blank=True)
 
-    profile_image = models.ImageField(default='default.jpg', blank=True,)
+    profile_image = models.ImageField(default='default.jpg', blank=True, )
 
     class Meta:
         verbose_name = _("user")
@@ -43,6 +45,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def clean(self):
         super().clean()
+
+        phones = [phone for phone in [self.phone_number, self.phone_number2, self.phone_number3] if phone]
+        if len(phones) != len(set(phones)):
+            raise ValidationError('Phone numbers must be unique.')
+
         self.email = self.__class__.objects.normalize_email(self.email)
 
     def get_full_name(self):
@@ -56,4 +63,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Return the short name for the user."""
         return self.first_name
 
-
+    # def save(self, *args, **kwargs):
+    #     # check that the owner is not in the list of users
+    #
+    #     self.full_clean()
+    #     super().save(*args, **kwargs)

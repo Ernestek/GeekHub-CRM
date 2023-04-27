@@ -21,10 +21,9 @@ def create_task_notification(sender, instance, created, **kwargs):
         else:
             if instance.user.is_staff:
                 # # check if any fields were updated
-                status = 'read' if instance.read else 'unread'
                 Notification.objects.create(
                     user=instance.user,
-                    message=f"Task '{instance.title}' status has been changed to {status}.",
+                    message=f"Task '{instance.title}' status has been changed to {instance.status}.",
                 )
 
 

@@ -1,6 +1,9 @@
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema
+from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from projects.models import Project
@@ -47,4 +50,17 @@ class ProjectViewSet(ModelViewSet):
             return ProjectCreateSerializer
         return ProjectUpdateSerializer
 
-
+    # def perform_create(self, serializer):
+    #     try:
+    #         serializer.instance.full_clean()
+    #     except ValidationError:
+    #         return Response(status=status.HTTP_400_BAD_REQUEST)
+    #     serializer.save()
+    #
+    # def perform_update(self, serializer):
+    #     try:
+    #         serializer.instance.full_clean()
+    #     except ValidationError:
+    #         return Response(status=status.HTTP_400_BAD_REQUEST)
+    #     else:
+    #         serializer.save()

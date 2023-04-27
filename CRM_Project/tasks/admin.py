@@ -10,7 +10,7 @@ class UserTaskAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'user',)
     list_display_links = ('id', 'title',)
 
-    list_filter = ('user', )
+    list_filter = ('user', 'project')
     fieldsets = (
         (None, {'fields': ('title', 'text')}),
         (_('User info'), {'fields': ('user', 'user_assigned',)}),

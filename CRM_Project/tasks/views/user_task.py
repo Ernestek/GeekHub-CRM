@@ -39,7 +39,7 @@ class UserTaskListViewSet(mixins.ListModelMixin,
     filter_backends = (filters.OrderingFilter, DjangoFilterBackend,)
     ordering_fields = ['created_at']
     ordering_description = 'Ordering by field updated_at'
-    filterset_fields = ['status']
+    filterset_fields = ['status', 'project']
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -74,7 +74,7 @@ class UserTaskUpdateDestroyRetrieveViewSet(mixins.RetrieveModelMixin,
 
 @extend_schema(
     tags=('UserTasks',),
-    description='Add task to logged in user',
+    description='Assign new tasks to other users',
 )
 class UserTaskCreateViewSet(mixins.CreateModelMixin,
                             GenericViewSet):
@@ -85,10 +85,21 @@ class UserTaskCreateViewSet(mixins.CreateModelMixin,
 
 @extend_schema(
     tags=('UserTasks',),
-    description='Assign new tasks to other users',
+    description='Add task to logged in user',
 )
 class MyTaskCreateViewSet(mixins.CreateModelMixin,
                           GenericViewSet):
     queryset = UserTask.objects.select_related('user', 'user_assigned')
     permission_classes = (IsAuthenticated, TemporaryPasswordChanged,)
     serializer_class = MyTaskCreateSerializer
+
+#
+# @extend_schema(
+#     tags=('UserTasks',),
+#     description='Assign new tasks users in project',
+# )
+# class UserTaskCreateViewSet(mixins.CreateModelMixin,
+#                             GenericViewSet):
+#     queryset = UserTask.objects.select_related('user', 'user_assigned')
+#     permission_classes = (IsAuthenticated, TemporaryPasswordChanged, IsStaff)
+#     serializer_class = UserTaskInProjectCreateSerializer
