@@ -1,16 +1,17 @@
 from rest_framework import serializers
 
 from partners.models import Partner, PartnerContactPerson
-from partners.serializers.partners_contact import ContactPersonListSerializer
+from partners.serializers.partners_contact import ContactPersonSerializer
 from projects.serializers.project import ProjectListSerializer
 
 
 class PartnerSerializer(serializers.ModelSerializer):
-    contact_person = ContactPersonListSerializer(many=True)
+    contact_person = ContactPersonSerializer(many=True)
 
     class Meta:
         model = Partner
         fields = (
+            'id',
             'name',
             'code',
             'contact_person',
@@ -35,7 +36,7 @@ class PartnerSerializer(serializers.ModelSerializer):
 
 
 class PartnerListSerializer(serializers.ModelSerializer):
-    contact_person = ContactPersonListSerializer(many=True)
+    contact_person = ContactPersonSerializer(many=True)
 
     class Meta:
         model = Partner
@@ -47,7 +48,7 @@ class PartnerListSerializer(serializers.ModelSerializer):
 
 
 class PartnerRetrieveSerializer(serializers.ModelSerializer):
-    contact_person = ContactPersonListSerializer(many=True)
+    contact_person = ContactPersonSerializer(many=True)
     project = ProjectListSerializer(many=True, read_only=True)
 
     class Meta:

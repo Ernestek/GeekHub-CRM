@@ -1,17 +1,11 @@
-from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
-from common.permissions import TemporaryPasswordChanged, IsStaff, IsOwner
-from projects.models import Project
-from projects.serializers.project_team import AddUserInProjectSerializer
-
-User = get_user_model()
+from common.permissions import TemporaryPasswordChanged, IsStaff
+from projects.serializers.project_team import AddUserInProjectSerializer, RemoveUserInProjectSerializer
 
 
 @extend_schema(
@@ -23,12 +17,13 @@ User = get_user_model()
 )
 class AddUserInTeam(CreateAPIView):
     serializer_class = AddUserInProjectSerializer
-    permission_classes = [IsAuthenticated, TemporaryPasswordChanged, IsStaff, IsOwner]
+    permission_classes = [IsAuthenticated, TemporaryPasswordChanged, IsStaff]
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema(
@@ -38,24 +33,32 @@ class AddUserInTeam(CreateAPIView):
         204: OpenApiResponse(description='User removed.'),
     }
 )
-class DeleteUserFromTeam(APIView):
-    permission_classes = [IsAuthenticated, TemporaryPasswordChanged, IsStaff, IsOwner]
+class DeleteUserFromTeam(GenericAPIView):
+    serializer_class = RemoveUserInProjectSerializer
+    permission_classes = [IsAuthenticated, TemporaryPasswordChanged, IsStaff]
 
-    def destroy(self, request, project_id, user_id):
-        project = get_object_or_404(Project.objects.select_related('owner'), pk=project_id)
-        user = get_object_or_404(User, pk=user_id)
-        project.users.remove(user)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-# class DeleteUserFromTeam(CreateAPIView):
-#     serializer_class = AddUserInProjectSerializer
-#     authentication_classes = [TokenAuthentication]
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+# class DeleteUserFromTeam(APIView):
 #     permission_classes = [IsAuthenticated, TemporaryPasswordChanged, IsStaff, IsOwner]
 #
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         print(serializer.data.get['user_id'])
-#         # user_id = serializer.data['user_id']
-#         # project = serializer.data['project']
-#         # project.users.remove(user_id)
+#     def delete(self, request, project_id, contact_id):
+#         project = get_object_or_404(Project.objects.select_related('owner'), pk=project_id)
+#
+#         if request.user != project.owner:
+#             return Response({'detail': _('You do not have permission to perform this action.')},
+#                             status=status.HTTP_403_FORBIDDEN)
+#         print(project.users.values_list('id', flat=True))
+#         if contact_id in project.users.values_list('id', flat=True):
+#             project.users.remove(contact_id)
+#         else:
+#             return Response(status=status.HTTP_404_NOT_FOUND)
+#         # user = get_object_or_404(User, pk=contact_id)
 #         return Response(status=status.HTTP_204_NO_CONTENT)

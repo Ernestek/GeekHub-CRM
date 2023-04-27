@@ -14,11 +14,11 @@ from tasks.models import UserTask
     tags=('UserTasks',),
     parameters=[
         OpenApiParameter(
-            name='user_id',
+            name='contact_id',
             location='query',
             required=False,
             type=int,
-            description='If the user_id field is empty, we will get information on the authorized user,'
+            description='If the contact_id field is empty, we will get information on the authorized user,'
                         'else get information about the user whose ID was entered.'
         ),
         OpenApiParameter(
@@ -43,7 +43,7 @@ class UserTaskListViewSet(mixins.ListModelMixin,
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        user_id = self.request.query_params.get('user_id', None)
+        user_id = self.request.query_params.get('contact_id', None)
         if user_id is None:
             user_id = self.request.user.id
         return queryset.filter(user_id=user_id)

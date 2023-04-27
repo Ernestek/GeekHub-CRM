@@ -2,7 +2,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from rest_framework import serializers
 
 from common.enums import ProjectStatus
 from common.models import BaseModel
@@ -28,9 +27,3 @@ class Project(BaseModel):
     #         print(self.owner.id)
     #         print(self.users.values_list('id', flat=True))
     #         raise ValidationError('Owner cannot be in the users list.')
-
-    # def save(self, *args, **kwargs):
-    #     # check that the owner is not in the list of users
-    #     self.full_clean()
-    #
-    #     super().save(*args, **kwargs)

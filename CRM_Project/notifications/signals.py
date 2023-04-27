@@ -31,15 +31,13 @@ def create_task_notification(sender, instance, created, **kwargs):
 def notify_project_users(sender, instance, action, pk_set, **kwargs):
     if action == 'post_add':
         for user_id in pk_set:
-            user = User.objects.get(pk=user_id)
             Notification.objects.create(
-                user=user,
+                user=User.objects.get(pk=user_id),
                 message=f'You have been added to the project {instance.name}'
             )
     elif action == 'post_remove':
         for user_id in pk_set:
-            user = User.objects.get(pk=user_id)
             Notification.objects.create(
-                user=user,
+                user=User.objects.get(pk=user_id),
                 message=f'You have been removed from the project {instance.name}'
             )

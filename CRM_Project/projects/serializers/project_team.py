@@ -1,5 +1,4 @@
 from django.contrib.auth import get_user_model
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 
@@ -17,12 +16,17 @@ class AddUserInProjectSerializer(serializers.Serializer):
         user_id = attrs['user_id']
 
         try:
-            User.objects.only('id').get(pk=user_id)
-        except (User.DoesNotExist, ValueError, TypeError, OverflowError):
+            if not User.objects.filter(pk=user_id).exists():
+                raise serializers.ValidationError(
+                    {'user_id': _('Invalid user id')},
+                    code='invalid_user_id',
+                )
+        except OverflowError:
             raise serializers.ValidationError(
                 {'user_id': _('Invalid user id')},
                 code='invalid_user_id',
             )
+
         try:
             project = Project.objects.select_related('owner').get(pk=project_id)
         except (Project.DoesNotExist, ValueError, TypeError, OverflowError):
@@ -36,18 +40,56 @@ class AddUserInProjectSerializer(serializers.Serializer):
                 {'user_id': _('Owner cannot be on the project team')},
                 code='invalid_user_id',
             )
+
+        # Checking the authorized user of the project owner
+        if self.context['request'].user != project.owner:
+            raise serializers.ValidationError(
+                {'detail': _('You do not have permission to perform this action.')},
+                code='permission_denied',
+            )
+
         attrs['project'] = project
         return attrs
 
     def create(self, validated_data):
-        user_id = validated_data['user_id']
-        project_id = validated_data['project_id']
         project = validated_data['project']
+        project.users.add(validated_data['user_id'])
+        return project
 
-        # user = get_object_or_404(User, pk=user_id)
-        # project = get_object_or_404(Project.objects.prefetch_related('users'), pk=project_id)
-        # project.users.add(user)
 
-        # project = Project.objects.select_related('owner').get(pk=project_id)
-        project.users.add(user_id)
+class RemoveUserInProjectSerializer(serializers.Serializer):
+    project_id = serializers.IntegerField(write_only=True)
+    user_id = serializers.IntegerField(write_only=True)
+
+    def validate(self, attrs):
+        project_id = attrs['project_id']
+        user_id = attrs['user_id']
+
+        try:
+            project = Project.objects.select_related('owner').get(pk=project_id)
+        except (Project.DoesNotExist, ValueError, TypeError, OverflowError):
+            raise serializers.ValidationError(
+                {'project_id': _('Invalid project id')},
+                code='invalid_project_id',
+            )
+
+        # Checking the authorized user of the project owner
+        if self.context['request'].user != project.owner:
+            raise serializers.ValidationError(
+                {'detail': _('You do not have permission to perform this action.')},
+                code='permission_denied',
+            )
+
+        if not (user_id in project.users.values_list('id', flat=True)):
+            raise serializers.ValidationError(
+                {'user_id': _('This user is not on the project team')},
+                code='invalid_user_id',
+            )
+
+        attrs['project'] = project
+        return attrs
+
+    def create(self, validated_data):
+        project = validated_data['project']
+        project.users.remove(validated_data['user_id'])
         return project
