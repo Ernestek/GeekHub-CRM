@@ -35,7 +35,6 @@ class UserUpdateView(UpdateAPIView):
     serializer_class = UserUpdateSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = [IsAuthenticated, TemporaryPasswordChanged]
-    parser_classes = (MultiPartParser, FormParser)
 
     def get_object(self):
         return self.request.user
