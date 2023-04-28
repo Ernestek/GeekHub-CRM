@@ -23,8 +23,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True)
 
-    first_name = models.CharField(_('first name'), max_length=150, validators=[validate_name], default='user name')
-    last_name = models.CharField(_('last name'), max_length=150, validators=[validate_name], default='user last name')
+    first_name = models.CharField(_('first name'), max_length=150, validators=[validate_name], blank=True)  # default='user name'
+    last_name = models.CharField(_('last name'), max_length=150, validators=[validate_name], blank=True)  # default='user last name'
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     password_changed = models.BooleanField(_('password changed'), default=False)
