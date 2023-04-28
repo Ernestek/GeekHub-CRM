@@ -14,7 +14,9 @@ from common.permissions import TemporaryPasswordChanged, IsMyNotifications
 
 @extend_schema(
     tags=('Notifications',),
-    description='Search user by full name.'
+    description='List all notifications. The user receives notifications '
+                'when a task is assigned to him and its status changes, '
+                'when added/removed from the project.'
 )
 class NotificationsListView(generics.ListAPIView):
     queryset = Notification.objects.select_related('user')
@@ -29,7 +31,7 @@ class NotificationsListView(generics.ListAPIView):
 
 @extend_schema(
     tags=('Notifications',),
-    description=''
+    description='Change status notifications'
 )
 class NotificationsUpdateStatusView(CreateAPIView):
     authentication_classes = (TokenAuthentication,)
@@ -46,7 +48,7 @@ class NotificationsUpdateStatusView(CreateAPIView):
 
 @extend_schema(
     tags=('Notifications',),
-    description=''
+    description='Delete notification'
 )
 class NotificationDeleteView(DestroyAPIView):
     queryset = Notification.objects.select_related('user')
