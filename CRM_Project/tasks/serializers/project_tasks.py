@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
-from projects.serializers.users_in_project import UsersShortInfoSerializers
 from tasks.models import UserTask
+from tasks.serializers.user_search import UserSearchSerializer
 
 
 class UserTasksInProjectSerializer(serializers.ModelSerializer):
-    user = UsersShortInfoSerializers()
+    user = UserSearchSerializer()
     class Meta:
         model = UserTask
         fields = (

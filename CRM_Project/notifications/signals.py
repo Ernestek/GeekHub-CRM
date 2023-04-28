@@ -21,10 +21,9 @@ def create_task_notification(sender, instance, created, **kwargs):
         else:
             if instance.user.is_staff:
                 # # check if any fields were updated
-                status = 'read' if instance.read else 'unread'
                 Notification.objects.create(
                     user=instance.user,
-                    message=f"Task '{instance.title}' status has been changed to {status}.",
+                    message=f"Task '{instance.title}' status has been changed to {instance.status}.",
                 )
 
 
@@ -32,15 +31,13 @@ def create_task_notification(sender, instance, created, **kwargs):
 def notify_project_users(sender, instance, action, pk_set, **kwargs):
     if action == 'post_add':
         for user_id in pk_set:
-            user = User.objects.get(pk=user_id)
             Notification.objects.create(
-                user=user,
+                user=User.objects.get(pk=user_id),
                 message=f'You have been added to the project {instance.name}'
             )
     elif action == 'post_remove':
         for user_id in pk_set:
-            user = User.objects.get(pk=user_id)
             Notification.objects.create(
-                user=user,
+                user=User.objects.get(pk=user_id),
                 message=f'You have been removed from the project {instance.name}'
             )

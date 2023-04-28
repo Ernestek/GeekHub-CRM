@@ -28,7 +28,7 @@ class IsStaff(BasePermission):
 
 class IsOwner(BasePermission):
     def has_object_permission(self, request, view, obj):
-        if request.method in ['DELETE', 'PUT', 'PATCH'] \
+        if request.method in ['DELETE', 'PUT', 'PATCH', 'POST'] \
                 and obj.owner == request.user:
             return True
         return False

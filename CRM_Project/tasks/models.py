@@ -17,7 +17,7 @@ class UserTask(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_task')
     user_assigned = models.ForeignKey(User, on_delete=models.CASCADE, related_name='assigned_user_task')
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='user_task')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='user_task', blank=True, null=True)
 
     def __str__(self):
         return self.title
