@@ -64,7 +64,6 @@ class ProjectUpdateSerializer(serializers.ModelSerializer):
             'owner',
             'name',
             'partner',
-            'users',
             'status',
             'summary',
         )
