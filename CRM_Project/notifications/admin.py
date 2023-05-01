@@ -5,5 +5,5 @@ from notifications.models import Notification
 
 @admin.register(Notification)
 class NotificationAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('created_at', 'updated_at',)
 # Register your models here.
