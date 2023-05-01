@@ -22,5 +22,5 @@ class PartnerContactPerson(BaseModel):
     # phone = models.CharField(max_length=20, unique=True)
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'id: {self.id}, {self.first_name} {self.last_name}'
 

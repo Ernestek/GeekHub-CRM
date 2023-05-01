@@ -15,6 +15,16 @@ class ContactPersonSerializer(serializers.ModelSerializer):
         )
 
 
+class ContactPersonUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PartnerContactPerson
+        fields = (
+            'first_name',
+            'last_name',
+            'phone',
+        )
+
+
 class AddContactPersonToPartnerCard(serializers.ModelSerializer):
     partner_id = serializers.IntegerField(write_only=True)
 

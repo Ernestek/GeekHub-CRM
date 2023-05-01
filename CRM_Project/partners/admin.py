@@ -7,6 +7,7 @@ from partners.models import Partner, PartnerContactPerson
 class PartnerContactPersonInline(admin.TabularInline):
     model = PartnerContactPerson
     extra = 1
+    readonly_fields = ('id', )
 
 
 @admin.register(Partner)
