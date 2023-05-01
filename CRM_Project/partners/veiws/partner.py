@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from common.permissions import TemporaryPasswordChanged, IsStaff
 from partners.models import Partner
-from partners.serializers.partner import PartnerSerializer, PartnerListSerializer, PartnerRetrieveSerializer
+from partners.serializers.partner import PartnerSerializer, PartnerListSerializer, PartnerRetrieveSerializer, \
+    PartnerUpdateSerializer
 
 
 @extend_schema(
@@ -28,6 +29,8 @@ class PartnerViewSet(ModelViewSet):
             return PartnerListSerializer
         elif self.action == 'retrieve':
             return PartnerRetrieveSerializer
+        elif self.action in ('update', 'partial_update'):
+            return PartnerUpdateSerializer
         return PartnerSerializer
 
     def get_permissions(self):

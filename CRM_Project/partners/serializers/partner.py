@@ -6,7 +6,7 @@ from projects.serializers.project import ProjectListSerializer
 
 
 class PartnerSerializer(serializers.ModelSerializer):
-    contact_person = ContactPersonSerializer(many=True)
+    contact_person = ContactPersonSerializer(many=True, required=False)
 
     class Meta:
         model = Partner
@@ -18,25 +18,26 @@ class PartnerSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        contact_person = attrs['contact_person']
+        contact_person = attrs.get('contact_person', None)
+        if contact_person:
+            phone_list = []
+            for contact in contact_person:
+                phone_list.append(contact.get('phone'))
 
-        phone_list = []
-        for contact in contact_person:
-            phone_list.append(contact.get('phone'))
-
-        if len(phone_list) > len(set(phone_list)):
-            raise serializers.ValidationError(
-                {'contact_person': 'Duplicate contact numbers'},
-                code='invalid_partner_id',
-            )
+            if len(phone_list) > len(set(phone_list)):
+                raise serializers.ValidationError(
+                    {'contact_person': 'Duplicate contact numbers'},
+                    code='invalid_partner_id',
+                )
 
         return attrs
 
     def create(self, validated_data):
-        contact_person_data = validated_data.pop('contact_person')
+        contact_person_data = validated_data.pop('contact_person', None)
         partner = Partner.objects.create(**validated_data)
-        for person_data in contact_person_data:
-            PartnerContactPerson.objects.create(partner=partner, **person_data)
+        if contact_person_data:
+            for person_data in contact_person_data:
+                PartnerContactPerson.objects.create(partner=partner, **person_data)
         return partner
 
 
@@ -63,4 +64,13 @@ class PartnerRetrieveSerializer(serializers.ModelSerializer):
             'code',
             'contact_person',
             'project',
+        )
+
+
+class PartnerUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Partner
+        fields = (
+            'name',
+            'code',
         )
