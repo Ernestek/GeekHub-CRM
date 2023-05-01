@@ -31,6 +31,7 @@ class ProjectRetrieveSerializer(serializers.ModelSerializer):
             'status',
             'owner',
             'summary',
+            'created_at',
         )
 
 
