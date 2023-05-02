@@ -19,7 +19,7 @@ from partners.serializers.partners_contact import AddContactPersonToPartnerCard
         204: OpenApiResponse(description='Contact added.'),
     }
 )
-class AddUserInPartnerContacts(CreateAPIView):
+class AddContactInPartnerContacts(CreateAPIView):
     serializer_class = AddContactPersonToPartnerCard
     permission_classes = [IsAuthenticated, TemporaryPasswordChanged, IsStaff]
 

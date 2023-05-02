@@ -62,9 +62,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         """Return the short name for the user."""
         return self.first_name
-
-    # def save(self, *args, **kwargs):
-    #     # check that the owner is not in the list of users
-    #
-    #     self.full_clean()
-    #     super().save(*args, **kwargs)

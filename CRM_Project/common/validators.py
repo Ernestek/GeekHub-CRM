@@ -52,3 +52,20 @@ def its_EDRPOU(code):
             return sum_code == int(code[7])
 
 
+def validate_unique_partner_contact_by_phones(instance):
+    # Get all associated PartnerContactPerson for instance
+    contact_people = instance.contact_person.all()
+    print(contact_people)
+    # Check that all phones are unique
+    if len(contact_people) != len(set([person.phone for person in contact_people])):
+        raise ValidationError('Each partner contact must have a unique phone number')
+
+
+def validate_users_in_project(instance):
+    # user_list = instance.users.all()
+    print(instance.users)
+    return
+    # if self.owner.id in self.users.values_list('id', flat=True):
+    #     print(self.owner.id)
+    #     print(self.users.values_list('id', flat=True))
+    #     raise ValidationError('Owner cannot be in the users list.')

@@ -1,13 +1,11 @@
 from django.contrib.auth import get_user_model
 from drf_spectacular.utils import extend_schema
 from rest_framework.generics import RetrieveAPIView, UpdateAPIView
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
 
-from account.serializers.profile import UserRetrieveSerializer, UserUpdateSerializer, \
-    SetProfileImageSerializer
+from account.serializers.profile import UserRetrieveSerializer, UserUpdateSerializer
 from common.permissions import TemporaryPasswordChanged
 
 User = get_user_model()
@@ -38,15 +36,3 @@ class UserUpdateView(UpdateAPIView):
 
     def get_object(self):
         return self.request.user
-
-
-# @extend_schema(
-#     tags=['Account'],
-#     request=SetProfileImageSerializer,
-#     description='Update user profile image'
-# )
-# class ProfileImageUpdateView(CreateAPIView):
-#     serializer_class = SetProfileImageSerializer
-#     permission_classes = [AllowAny]
-#     parser_classes = (FormParser, MultiPartParser)
-#     authentication_classes = [TokenAuthentication]
