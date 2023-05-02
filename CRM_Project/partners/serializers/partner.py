@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import serializers
 
 from partners.models import Partner, PartnerContactPerson
@@ -34,10 +35,16 @@ class PartnerSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         contact_person_data = validated_data.pop('contact_person', None)
-        partner = Partner.objects.create(**validated_data)
         if contact_person_data:
-            for person_data in contact_person_data:
-                PartnerContactPerson.objects.create(partner=partner, **person_data)
+            with transaction.atomic():
+                partner = Partner.objects.create(**validated_data)
+                contact_person_objs = []
+                for person_data in contact_person_data:
+                    person = PartnerContactPerson(**person_data, partner=partner)
+                    contact_person_objs.append(person)
+                PartnerContactPerson.objects.bulk_create(contact_person_objs)
+        else:
+            partner = Partner.objects.create(**validated_data)
         return partner
 
 

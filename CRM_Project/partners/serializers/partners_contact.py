@@ -49,12 +49,20 @@ class AddContactPersonToPartnerCard(serializers.ModelSerializer):
                 {'partner_id': _('Invalid partner id')},
                 code='invalid_partner_id',
             )
+
         if phone in partner.contact_person.values_list('phone', flat=True):
             raise serializers.ValidationError(
                 {'contact_phone': _('Contact with this number exists')},
                 code='invalid_contact_phone',
             )
         return attrs
+
+    # def create(self, validated_data):
+    #     print(validated_data)
+    #
+    #     validated_data['partner'].contact_person.add(
+    #
+    #     )
 
 
 class RemoveFromPartnerContactsPersonSerializer(serializers.Serializer):
@@ -78,8 +86,9 @@ class RemoveFromPartnerContactsPersonSerializer(serializers.Serializer):
                 {'contact_id': _('This contact is not on the contact person list')},
                 code='invalid_contact_id',
             )
-
+        attrs['partner'] = partner
         return attrs
 
     def create(self, validated_data):
         PartnerContactPerson.objects.get(pk=validated_data['contact_id']).delete()
+        return validated_data['partner']

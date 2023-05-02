@@ -37,12 +37,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         phone_number2 = attrs.get('phone_number2', None)
         phone_number3 = attrs.get('phone_number3', None)
 
-        phones = [phone for phone in [phone_number, phone_number2, phone_number3] if phone]
-        if len(phones) != len(set(phones)):
-            raise ValidationError(
-                _('Phone numbers must be unique.')
-            )
-        print(first_name)
+        # phones = [phone for phone in [phone_number, phone_number2, phone_number3] if phone]
+        # if len(phones) != len(set(phones)):
+        #     raise ValidationError(
+        #         _('Phone numbers must be unique.')
+        #     )
+
         if first_name == '':
             raise serializers.ValidationError(
                 {'last_name': _('This field may not be blank.')},

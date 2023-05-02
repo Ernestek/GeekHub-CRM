@@ -27,19 +27,18 @@ class NotificationStatusUpdateSerializer(serializers.Serializer):
         notification_id = attrs['notification_id']
 
         try:
-            Notification.objects.get(pk=notification_id)
+            notification = Notification.objects.get(pk=notification_id)
         except (Notification.DoesNotExist, ValueError, TypeError, OverflowError):
             raise serializers.ValidationError(
                 {'notification_id': _('Invalid project id')},
                 code='invalid_project_id',
             )
-
+        attrs['notification'] = notification
         return attrs
 
     def create(self, validated_data):
-        notification = Notification.objects.get(pk=validated_data['notification_id'])
-        notification.read = not notification.read
-        notification.save()
-        return notification
+        validated_data['notification'].read = not validated_data['notification'].read
+        validated_data['notification'].save()
+        return validated_data['notification']
 
 

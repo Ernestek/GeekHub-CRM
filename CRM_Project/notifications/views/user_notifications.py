@@ -26,7 +26,7 @@ class NotificationsListView(generics.ListAPIView):
     filterset_fields = ['read']
 
     def get_queryset(self):
-        return Notification.objects.filter(user=self.request.user).order_by('created_at')
+        return self.queryset.filter(user=self.request.user).order_by('created_at')
 
 
 @extend_schema(
@@ -42,7 +42,7 @@ class NotificationsUpdateStatusView(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        print(serializer.context['view'].object.read)
+        # print(serializer.context['view'].object.read)
         return Response(request.data, status=status.HTTP_201_CREATED)
 
 
