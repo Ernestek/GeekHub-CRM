@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 
+from projects.models import Project
 from projects.serializers.users_in_project import UsersShortInfoSerializers
 from tasks.models import UserTask
 from tasks.serializers.user_search import UserSearchSerializer
@@ -54,6 +56,25 @@ class UserTaskCreateSerializer(serializers.ModelSerializer):
             'project',
             'user_assigned',
         )
+
+    def validate(self, attrs):
+        project_id = attrs.get('project', None)
+        user_id = attrs.get('user')
+
+        if project_id:
+            try:
+                project = Project.objects.select_related('owner').prefetch_related('users').get(pk=project_id)
+            except (Project.DoesNotExist, ValueError, TypeError, OverflowError):
+                raise serializers.ValidationError(
+                    {'project_id': _('Invalid project id')},
+                    code='invalid_project_id',
+                )
+
+            if not (user_id in project.users.values_list('id', flat=True)):
+                raise serializers.ValidationError(
+                    {'user_id': _('This user is not on the project team')},
+                    code='invalid_user_id',
+                )
 
 
 class MyTaskCreateSerializer(serializers.ModelSerializer):
