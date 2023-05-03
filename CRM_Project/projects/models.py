@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from common.enums import ProjectStatus
 from common.models import BaseModel
-from common.validators import validate_users_in_project
+from common.validators import validate_users_in_project, owner_is_staff
 from partners.models import Partner
 
 User = get_user_model()
@@ -22,3 +22,6 @@ class Project(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        owner_is_staff(self.owner)

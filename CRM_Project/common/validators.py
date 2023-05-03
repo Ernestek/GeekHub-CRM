@@ -69,3 +69,12 @@ def validate_users_in_project(instance):
     #     print(self.owner.id)
     #     print(self.users.values_list('id', flat=True))
     #     raise ValidationError('Owner cannot be in the users list.')
+
+
+def owner_is_staff(instance):
+    print(instance.is_staff)
+    if not instance.is_staff:
+        raise ValidationError(
+            _('Only staff can be the owner'),
+            params={'value': instance},
+        )
