@@ -30,7 +30,7 @@ class NotificationStatusUpdateSerializer(serializers.Serializer):
             notification = Notification.objects.get(pk=notification_id)
         except (Notification.DoesNotExist, ValueError, TypeError, OverflowError):
             raise serializers.ValidationError(
-                {'notification_id': _('Invalid project id')},
+                {'notification_id': _('Invalid notification id')},
                 code='invalid_project_id',
             )
         attrs['notification'] = notification
