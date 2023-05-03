@@ -6,6 +6,7 @@ from tasks.serializers.user_search import UserSearchSerializer
 
 class UserTasksInProjectSerializer(serializers.ModelSerializer):
     user = UserSearchSerializer()
+
     class Meta:
         model = UserTask
         fields = (
