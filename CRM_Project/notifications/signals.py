@@ -19,7 +19,12 @@ def create_task_notification(sender, instance, created, **kwargs):
                         f"{instance.user_assigned} assigned the task",
             )
         else:
-            if instance.user.is_staff:
+            if instance.user.is_superuser:
+                Notification.objects.create(
+                    user=instance.user,
+                    message=f'Admin made changes to the task "{instance.title}" .',
+                )
+            else:
                 # # check if any fields were updated
                 Notification.objects.create(
                     user=instance.user,
