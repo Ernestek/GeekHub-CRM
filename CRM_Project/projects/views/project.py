@@ -1,13 +1,11 @@
-from django.core.exceptions import ValidationError
 from django.db.models import Q
 from drf_spectacular.utils import extend_schema
-from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from projects.models import Project
-from common.permissions import TemporaryPasswordChanged, IsStaffOrAssigned, IsStaff, IsOwner
+from common.permissions import TemporaryPasswordChanged, IsStaff, IsOwner
 from projects.serializers.project import ProjectListSerializer, ProjectRetrieveSerializer, ProjectCreateSerializer, \
     ProjectUpdateSerializer
 
@@ -50,17 +48,11 @@ class ProjectViewSet(ModelViewSet):
             return ProjectCreateSerializer
         return ProjectUpdateSerializer
 
-    # def perform_create(self, serializer):
-    #     try:
-    #         serializer.instance.full_clean()
-    #     except ValidationError:
-    #         return Response(status=status.HTTP_400_BAD_REQUEST)
-    #     serializer.save()
-    #
-    # def perform_update(self, serializer):
-    #     try:
-    #         serializer.instance.full_clean()
-    #     except ValidationError:
-    #         return Response(status=status.HTTP_400_BAD_REQUEST)
-    #     else:
-    #         serializer.save()
+    # def perform_destroy(self, instance):
+    #     print(instance.user_task.values_list('status', flat=True))
+    #     if 'In progress' in instance.user_task.values_list('status', flat=True):
+    #         raise ValidationError(
+    #             {'project': 'The project has unfinished tasks'},
+    #             code='invalid',
+    #         )
+    #     instance.delete()

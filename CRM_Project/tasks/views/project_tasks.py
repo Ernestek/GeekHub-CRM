@@ -16,7 +16,6 @@ class UserTasksInProjectListView(ListAPIView):
     queryset = UserTask.objects.select_related('user')
     serializer_class = UserTasksInProjectSerializer
     permission_classes = (IsAuthenticated, TemporaryPasswordChanged, IsOwnerOrInProject)
-    # lookup_field = 'project_id'
 
     def get_queryset(self):
         queryset = super().get_queryset()

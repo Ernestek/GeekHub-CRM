@@ -9,11 +9,10 @@ app_name = 'partners'
 
 projects_router = routers.DefaultRouter()
 projects_router.register('', PartnerViewSet)
-projects_router.register('update-partner-contact', ContactPersonUpdateViewSet)
+projects_router.register('partner-contact-update', ContactPersonUpdateViewSet)
 
 urlpatterns = [
     path('partner-contacts-add', AddContactInPartnerContacts.as_view(), name='partner-contacts-add'),
     path('partner-contacts-remove', DeleteUserFromPartnerContacts.as_view(), name='partner-contacts-remove'),
-    # path('partner-contact-update', ContactPersonUpdateViewSet.as_view(), name='partner-contact-update'),
     path('', include(projects_router.urls)),
 ]

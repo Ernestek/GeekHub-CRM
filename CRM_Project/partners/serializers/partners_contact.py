@@ -57,13 +57,6 @@ class AddContactPersonToPartnerCard(serializers.ModelSerializer):
             )
         return attrs
 
-    # def create(self, validated_data):
-    #     print(validated_data)
-    #
-    #     validated_data['partner'].contact_person.add(
-    #
-    #     )
-
 
 class RemoveFromPartnerContactsPersonSerializer(serializers.Serializer):
     partner_id = serializers.IntegerField(write_only=True)

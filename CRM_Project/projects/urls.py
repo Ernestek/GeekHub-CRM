@@ -13,8 +13,6 @@ projects_router.register('', ProjectViewSet)
 
 urlpatterns = [
     path('project-team-add-member', AddUserInTeam.as_view(), name='project-team-add-member'),
-    # path('<int:project_id>/remove-user-from-team/<int:contact_id>/', DeleteUserFromTeam.as_view(),
-    #      name='user-in-project-team-delete'),
     path('project-team-remove-member', DeleteUserFromTeam.as_view(), name='project-team-remove-member'),
     path('search-partner-by-code', PartnerSearchByCodeView.as_view(), name='search-partner-by-code'),
     path('', include(projects_router.urls)),

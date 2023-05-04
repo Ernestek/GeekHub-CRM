@@ -12,7 +12,7 @@ User = get_user_model()
 
 
 @extend_schema(
-    tags=('UserTasks',),
+    tags=('Search',),
     parameters=[
         OpenApiParameter(
             name='full_name',

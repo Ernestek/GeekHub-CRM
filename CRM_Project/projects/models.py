@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from common.enums import ProjectStatus
 from common.models import BaseModel
-from common.validators import validate_users_in_project, owner_is_staff
+from common.validators import owner_is_staff
 from partners.models import Partner
 
 User = get_user_model()
@@ -18,7 +17,7 @@ class Project(BaseModel):
     status = models.CharField(_('status'), max_length=20, choices=ProjectStatus.choices,
                               default=ProjectStatus.in_progress)
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='project_owner',)
-    summary = models.TextField(_('summary'), )
+    summary = models.TextField(_('summary'),)
 
     def __str__(self):
         return self.name

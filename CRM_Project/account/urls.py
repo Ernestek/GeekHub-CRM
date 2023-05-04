@@ -20,6 +20,4 @@ urlpatterns = [
     path('profile/', UserRetrieveView.as_view(), name='profile'),
 
     path('profile-update/', UserUpdateView.as_view(), name='profile-update'),
-    # path('profile-image-update/', ProfileImageUpdateView.as_view(), name='profile-update'),
-
 ]
