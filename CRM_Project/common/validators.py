@@ -10,11 +10,6 @@ def validate_name(value):
         )
 
 
-# def owner_not_in_users_validator(owner, users):
-#     if owner in users.all():
-#         raise ValidationError('Owner cannot be in the users list.')
-
-
 def partner_code_validator(value):
     if value.isdigit():
         len_value = len(value)
@@ -59,16 +54,6 @@ def validate_unique_partner_contact_by_phones(instance):
     # Check that all phones are unique
     if len(contact_people) != len(set([person.phone for person in contact_people])):
         raise ValidationError('Each partner contact must have a unique phone number')
-
-
-def validate_users_in_project(instance):
-    # user_list = instance.users.all()
-    print(instance.users)
-    return
-    # if self.owner.id in self.users.values_list('id', flat=True):
-    #     print(self.owner.id)
-    #     print(self.users.values_list('id', flat=True))
-    #     raise ValidationError('Owner cannot be in the users list.')
 
 
 def owner_is_staff(instance):

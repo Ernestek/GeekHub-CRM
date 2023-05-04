@@ -55,13 +55,9 @@ class ProjectCreateSerializer(serializers.ModelSerializer):
 
 
 class ProjectUpdateSerializer(serializers.ModelSerializer):
-    owner = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    # users = serializers.CharField(source='user')
-    # users = serializers.IntegerField()
     class Meta:
         model = Project
         fields = (
-            'owner',
             'name',
             'partner',
             'status',
@@ -69,18 +65,11 @@ class ProjectUpdateSerializer(serializers.ModelSerializer):
         )
 
     # def validate(self, attrs):
-    #     # проверяем, что владелец не находится в списке пользователей
-    #     if attrs['owner'] in attrs.get('users', []):
-    #         raise serializers.ValidationError(_('Owner cannot be in the users list.'))
+    #     status = attrs.get('status', None)
+    #
+    #     if status == 'Done' and \
+    #             any(task_status != 'Done' for task_status in self.instance.user_task.values_list('status', flat=True)):
+    #         raise serializers.ValidationError('Status of this project cannot be updated to ready. '
+    #                                           'The project has unfinished tasks')
+    #
     #     return attrs
-
-    # def update(self, instance, validated_data):
-    #     instance.name = validated_data.get('name', instance.name)
-    #     instance.partner = validated_data.get('partner', instance.partner)
-    #     instance.users = validated_data.get('users', instance.users)
-    #     instance.status = validated_data.get('status', instance.status)
-    #     instance.summary = validated_data.get('summary', instance.summary)
-    #
-    #     instance.save()
-    #
-    #     return instance

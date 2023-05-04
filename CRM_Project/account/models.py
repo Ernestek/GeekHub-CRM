@@ -1,16 +1,12 @@
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.core.exceptions import ValidationError
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-from django.db import models, transaction
+from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-from rest_framework.response import Response
 
 from account.managers import UserManager
-from account.tasks import send_mail_for_registered_user
 from common.validators import validate_name
 
 
@@ -23,8 +19,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(_('email address'), unique=True)
 
-    first_name = models.CharField(_('first name'), max_length=150, validators=[validate_name], blank=True)  # default='user name'
-    last_name = models.CharField(_('last name'), max_length=150, validators=[validate_name], blank=True)  # default='user last name'
+    first_name = models.CharField(_('first name'), max_length=150, validators=[validate_name], blank=True)
+    last_name = models.CharField(_('last name'), max_length=150, validators=[validate_name], blank=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     password_changed = models.BooleanField(_('password changed'), default=False)

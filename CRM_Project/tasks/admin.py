@@ -7,7 +7,7 @@ from tasks.models import UserTask
 @admin.register(UserTask)
 class UserTaskAdmin(admin.ModelAdmin):
 
-    list_display = ('id', 'title', 'user', 'created_at')
+    list_display = ('id', 'title', 'status', 'created_at')
     list_display_links = ('id', 'title',)
 
     list_filter = ('user', 'project')
