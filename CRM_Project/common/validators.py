@@ -50,16 +50,15 @@ def its_EDRPOU(code):
 def validate_unique_partner_contact_by_phones(instance):
     # Get all associated PartnerContactPerson for instance
     contact_people = instance.contact_person.all()
-    print(contact_people)
     # Check that all phones are unique
     if len(contact_people) != len(set([person.phone for person in contact_people])):
         raise ValidationError('Each partner contact must have a unique phone number')
 
 
 def owner_is_staff(instance):
-    print(instance.is_staff)
-    if not instance.is_staff:
-        raise ValidationError(
-            _('Only staff can be the owner'),
-            params={'value': instance},
-        )
+    if instance:
+        if not instance.is_staff:
+            raise ValidationError(
+                _('Only staff can be the owner'),
+                params={'value': instance},
+            )
