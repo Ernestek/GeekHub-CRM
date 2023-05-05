@@ -203,7 +203,7 @@ DEFAULT_FROM_EMAIL = 'testmail@gmail.com'
 
 PASSWORD_RESET_TIMEOUT = 60*60*24
 
-FRONTEND_HOST = 'http://127.0.0.1:8000'
+FRONTEND_HOST = 'http://159.89.128.190:9000/'
 FRONTEND_PASSWORD_RESET_PATH = '/password-reset-confirm/{uid}/{token}'
 
 if DEBUG:
