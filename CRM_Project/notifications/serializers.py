@@ -33,6 +33,13 @@ class NotificationStatusUpdateSerializer(serializers.Serializer):
                 {'notification_id': _('Invalid notification id')},
                 code='invalid_project_id',
             )
+
+        # Checking if a notification belongs to a logged-in person
+        if self.context['request'].user != notification.user:
+            raise serializers.ValidationError(
+                {'detail': _('You do not have permission to perform this action.')},
+                code='permission_denied',
+            )
         attrs['notification'] = notification
         return attrs
 

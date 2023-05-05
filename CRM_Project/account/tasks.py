@@ -17,7 +17,7 @@ def send_mail_for_registered_user(user_email):
     user_model = get_user_model()
     user = user_model.objects.only('email').get(email=user_email)
     password = user_model.objects.make_random_password()
-    url = urljoin(settings.URL, 'api/account/login/')
+    url = urljoin(settings.FRONTEND_HOST, 'api/account/login/')
     user.set_password(password)
     user.save()
     send_mail(
