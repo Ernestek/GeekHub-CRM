@@ -41,7 +41,7 @@ def send_email_for_password_reset(user_id: int):
     token = default_token_generator.make_token(user)
 
     link = urljoin(
-        settings.BASE_URL,
+        settings.FRONTEND_HOST,
         settings.FRONTEND_PASSWORD_RESET_PATH.format(uid=uid, token=token),
     )
     title = 'Reset password'
