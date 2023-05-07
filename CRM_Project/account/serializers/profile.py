@@ -56,11 +56,3 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             )
 
         return attrs
-
-
-class SetProfileImageSerializer(serializers.ModelSerializer):
-    profile_image = serializers.ImageField(max_length=None, required=False)
-
-    class Meta:
-        model = User
-        fields = ('profile_image',)
