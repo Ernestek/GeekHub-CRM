@@ -5,19 +5,15 @@ from django.utils.translation import gettext_lazy as _
 from projects.models import Project
 from projects.serializers.users_in_project import UsersShortInfoSerializers
 from tasks.models import UserTask
-from tasks.serializers.user_search import UserSearchSerializer
 
 User = get_user_model()
 
 
 class UserTasksListSerializer(serializers.ModelSerializer):
-    # user = UserSearchSerializer()
-
     class Meta:
         model = UserTask
         fields = (
             'id',
-            # 'user',
             'title',
             'status',
             'created_at',
@@ -27,7 +23,6 @@ class UserTasksListSerializer(serializers.ModelSerializer):
 class UserTasksRetrieveSerializer(serializers.ModelSerializer):
     user = UsersShortInfoSerializers()
     user_assigned = serializers.CharField(source='user.email', read_only=True)
-    # user_assigned = UserSearchSerializer()
 
     class Meta:
         model = UserTask
@@ -45,8 +40,6 @@ class UserTasksRetrieveSerializer(serializers.ModelSerializer):
 
 class UserTaskCreateSerializer(serializers.ModelSerializer):
     user_assigned = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    # project_id = serializers.IntegerField(required=False, allow_null=True)
-    # project = serializers.HiddenField(default=None)
 
     class Meta:
         model = UserTask
@@ -54,7 +47,6 @@ class UserTaskCreateSerializer(serializers.ModelSerializer):
             'user',
             'title',
             'text',
-            # 'project_id',
             'project',
             'user_assigned',
         )
@@ -100,26 +92,3 @@ class UserTasksUpdateSerializer(serializers.ModelSerializer):
         fields = (
             'status',
         )
-
-
-# class UserMultipleChoiceField(serializers.MultipleChoiceField):
-#     def to_representation(self, value):
-#         return [str(pk) for pk in value]
-#
-#     def to_internal_value(self, data):
-#         queryset = User.objects.all()
-#         return [queryset.get(pk=pk) for pk in data]
-#
-#
-# class UserTaskInProjectCreateSerializer(serializers.ModelSerializer):
-#     user = UserMultipleChoiceField(choices=User.objects.filter(project_id='project.id').values_list('email', 'id'))
-#     user_assigned = serializers.HiddenField(default=serializers.CurrentUserDefault())
-#
-#     class Meta:
-#         model = UserTask
-#         fields = (
-#             'user',
-#             'title',
-#             'text',
-#             'user_assigned',
-#         )
