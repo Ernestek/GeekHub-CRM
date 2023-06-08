@@ -13,7 +13,7 @@ from account.serializers.set_new_password import SetNewPasswordSerializer
     tags=('Account',),
     description='Use this endpoint if user authentication, but password not changed',
     responses={
-        308: OpenApiResponse(description='User changed the temporary password, redirect to the main page.'),
+        204: OpenApiResponse(description='User changed the temporary password, redirect to the main page.'),
     }
 )
 class ChangeTemporaryPasswordView(CreateAPIView):
@@ -31,4 +31,4 @@ class ChangeTemporaryPasswordView(CreateAPIView):
             token = Token.objects.create(user=user)
             serializer.save()
             return Response({'token': token.key}, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_308_PERMANENT_REDIRECT)
+        return Response(status=status.HTTP_204_NO_CONTENT)

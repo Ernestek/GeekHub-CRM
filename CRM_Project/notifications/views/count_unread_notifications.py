@@ -16,5 +16,5 @@ class UnreadNotificationCountAPIView(RetrieveAPIView):
     permission_classes = (IsAuthenticated, TemporaryPasswordChanged)
 
     def get_object(self):
-        count = Notification.objects.prefetch_related('user').filter(user=self.request.user, read=False).count()
+        count = Notification.objects.select_related('user').filter(user=self.request.user, read=False).count()
         return {'count': count}

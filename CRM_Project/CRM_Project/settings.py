@@ -10,19 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+from pathlib import Path
 
 import environ
 
-
-try:
-    from .local_settings import *
-except ImportError:
-    from pathlib import Path
-
-    BASE_DIR = Path(__file__).resolve().parent.parent
-    SECRET_KEY = 'the_most_secret_key_you_ever_seen'
-    DEBUG = False
-    ALLOWED_HOSTS = []
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Application definition
 env = environ.Env()
@@ -30,7 +22,13 @@ ENV_FILE_PATH = BASE_DIR / '.env'
 if ENV_FILE_PATH.exists():
     environ.Env.read_env(env_file=str(ENV_FILE_PATH))
 
-BASE_URL = 'http://localhost:8000/'
+SECRET_KEY = env.str('SECRET_KEY', default='django_secret_key')
+DEBUG = env.bool('DEBUG', default=False)
+
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
+
+
+# BASE_URL = 'http://localhost:8000/'
 AUTH_USER_MODEL = 'account.User'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'images')
@@ -168,8 +166,6 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -195,17 +191,19 @@ CELERY_RESULT_SERIALIZER = 'json'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'iernestek@gmail.com'
-EMAIL_HOST_PASSWORD = 'lcfsepteoyzboyxo'
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = 587
 
 DEFAULT_FROM_EMAIL = 'testmail@gmail.com'
 
 PASSWORD_RESET_TIMEOUT = 60*60*24
 
-FRONTEND_HOST = 'http://159.89.128.190:9000/'
-FRONTEND_PASSWORD_RESET_PATH = '/password-reset-confirm/{uid}/{token}'
+FRONTEND_HOST = env('FRONTEND_HOST')
+FRONTEND_PASSWORD_RESET_PATH = env('FRONTEND_PASSWORD_RESET_PATH')
+LOGIN_FRONT = env('LOGIN_FRONT')
 
+# Debug toolbar
 if DEBUG:
     import socket  # only if you haven't already imported this
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())

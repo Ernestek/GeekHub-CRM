@@ -24,7 +24,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(_('active'), default=True)
     is_staff = models.BooleanField(_('staff status'), default=False)
     password_changed = models.BooleanField(_('password changed'), default=False)
-    date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
+    date_joined = models.DateTimeField(_('date joined'), auto_now_add=True)
     phone_number = PhoneNumberField(_('phone number'), null=True, blank=True, )
     phone_number2 = PhoneNumberField(_('phone number 2'), null=True, blank=True)
     phone_number3 = PhoneNumberField(_('phone number 3'), null=True, blank=True)
@@ -32,8 +32,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     profile_image = models.ImageField(default='default.jpg', blank=True, )
 
     class Meta:
-        verbose_name = _("user")
-        verbose_name_plural = _("users")
+        verbose_name = _('user')
+        verbose_name_plural = _('users')
         db_table = 'users'
 
     def __str__(self):
@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Return the first_name plus the last_name, with a space in between.
         """
-        full_name = "%s %s" % (self.first_name, self.last_name)
+        full_name = '%s %s' % (self.first_name, self.last_name)
         return full_name.strip()
 
     def get_short_name(self):

@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.utils.translation import gettext_lazy as _
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
@@ -20,10 +21,7 @@ class SetNewPasswordSerializer(serializers.Serializer):
         return value
 
     def validate(self, attrs):
-        old_password = attrs['old_password']
-        new_password = attrs['new_password']
-
-        if old_password == new_password:
+        if attrs['old_password'] == attrs['new_password']:
             raise serializers.ValidationError(
                 {'new_password': _('New password must not match the old password.')},
                 code="password_match",
@@ -38,9 +36,3 @@ class SetNewPasswordSerializer(serializers.Serializer):
         user.password_changed = True
         user.save(update_fields=['password', 'password_changed'])
         return user
-
-    class Meta:
-        model = User
-        fields = (
-            'password'
-        )

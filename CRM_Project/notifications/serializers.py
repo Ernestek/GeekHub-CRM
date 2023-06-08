@@ -44,8 +44,9 @@ class NotificationStatusUpdateSerializer(serializers.Serializer):
         return attrs
 
     def create(self, validated_data):
-        validated_data['notification'].read = not validated_data['notification'].read
-        validated_data['notification'].save()
-        return validated_data['notification']
+        notification = validated_data['notification']
+        notification.read = not notification.read
+        notification.save(update_fields=['read', 'updated_at'])
+        return notification
 
 

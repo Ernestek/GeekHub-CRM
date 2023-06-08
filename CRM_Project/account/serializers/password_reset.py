@@ -18,18 +18,16 @@ class ConfirmPasswordResetSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         user_model = get_user_model()
-        uid = attrs['uid']
-        token = attrs['token']
 
         try:
-            user = user_model.objects.get(pk=decode_uid(uid))
+            user = user_model.objects.get(pk=decode_uid(attrs['uid']))
         except (user_model.DoesNotExist, ValueError, TypeError, OverflowError):
             raise serializers.ValidationError(
                 {'uid': _('Invalid uid')},
                 code='invalid_uid',
             )
 
-        if not default_token_generator.check_token(user, token):
+        if not default_token_generator.check_token(user, attrs['token']):
             raise serializers.ValidationError(
                 {'token': _('Invalid token')},
                 code='invalid_token',

@@ -5,7 +5,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.views import APIView
 
 from account.serializers.login import LoginSerializer
 
@@ -18,7 +18,7 @@ from account.serializers.login import LoginSerializer
         400: OpenApiResponse(description='Invalid data.'),
     }
 )
-class LoginView(ObtainAuthToken):
+class LoginView(APIView):
     permission_classes = (AllowAny,)
     authentication_classes = [TokenAuthentication]
     serializer_class = LoginSerializer

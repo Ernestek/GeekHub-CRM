@@ -47,18 +47,9 @@ def its_EDRPOU(code):
             return sum_code == int(code[7])
 
 
-def validate_unique_partner_contact_by_phones(instance):
-    # Get all associated PartnerContactPerson for instance
-    contact_people = instance.contact_person.all()
-    # Check that all phones are unique
-    if len(contact_people) != len(set([person.phone for person in contact_people])):
-        raise ValidationError('Each partner contact must have a unique phone number')
-
-
 def owner_is_staff(instance):
-    if instance:
-        if not instance.is_staff:
-            raise ValidationError(
-                _('Only staff can be the owner'),
-                params={'value': instance},
-            )
+    if instance and instance.is_staff:
+        raise ValidationError(
+            _('Only staff can be the owner'),
+            params={'value': instance},
+        )
