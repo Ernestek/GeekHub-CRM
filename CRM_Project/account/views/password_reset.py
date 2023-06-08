@@ -5,7 +5,8 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from account.serializers.password_reset import RequestPasswordResetSerializer, ConfirmPasswordResetSerializer
+from account.serializers.password_reset import RequestPasswordResetSerializer
+from account.serializers.password_reset import ConfirmPasswordResetSerializer
 from account.tasks import send_email_for_password_reset
 
 

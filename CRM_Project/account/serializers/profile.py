@@ -33,9 +33,9 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         first_name = attrs.get('first_name')
         last_name = attrs.get('last_name')
-        phone_number = attrs.get('phone_number', None)
-        phone_number2 = attrs.get('phone_number2', None)
-        phone_number3 = attrs.get('phone_number3', None)
+        phone_number = attrs.get('phone_number')
+        phone_number2 = attrs.get('phone_number2')
+        phone_number3 = attrs.get('phone_number3')
 
         phones = [phone for phone in [phone_number, phone_number2, phone_number3] if phone]
         if len(phones) != len(set(phones)):

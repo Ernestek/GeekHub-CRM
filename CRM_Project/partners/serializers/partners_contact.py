@@ -3,6 +3,10 @@ from rest_framework import serializers
 
 from partners.models import PartnerContactPerson, Partner
 
+# class ContactPersonSerializer(serializers.Serializer):
+#     first_name = serializers.CharField(max_length=20)
+#     last_name = serializers.CharField(max_length=20)
+#     phone = serializers.CharField(max_length=20)
 
 class ContactPersonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,7 +17,21 @@ class ContactPersonSerializer(serializers.ModelSerializer):
             'last_name',
             'phone',
         )
+    def validate(self, attrs):
+        print(123)
+        return attrs
+    def create(self, validated_data):
+        print(validated_data)
+        print(1)
+        instance = PartnerContactPerson(**validated_data)
+        # instance.save(commit=False)
+        return instance
 
+    # def to_representation(self, instance):
+    #     pass
+    #
+    # def to_internal_value(self, data):
+    #     pass
 
 class ContactPersonUpdateSerializer(serializers.ModelSerializer):
     class Meta:

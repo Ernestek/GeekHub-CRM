@@ -42,8 +42,7 @@ class NotificationsUpdateStatusView(CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        # print(serializer.context['view'].object.read)
-        return Response(request.data, status=status.HTTP_201_CREATED)
+        return Response(serializer, status=status.HTTP_201_CREATED)
 
 
 @extend_schema(

@@ -17,7 +17,7 @@ def send_mail_for_registered_user(user_email):
     user_model = get_user_model()
     user = user_model.objects.only('email').get(email=user_email)
     password = user_model.objects.make_random_password()
-    url = urljoin(settings.FRONTEND_HOST, 'api/account/login/')
+    url = urljoin(settings.FRONTEND_HOST, settings.LOGIN_FRONT)
     user.set_password(password)
     user.save()
     send_mail(
@@ -25,7 +25,7 @@ def send_mail_for_registered_user(user_email):
         f'Your temporary password: {password}, '
         f'you will need to change it at the first authorization.\n'
         f'{url}',
-        f'{settings.EMAIL_HOST_USER}',
+        {settings.EMAIL_HOST_USER},
         (user_email,),
         fail_silently=False
     )

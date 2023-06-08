@@ -7,7 +7,7 @@ from projects.serializers.project import ProjectListSerializer
 
 
 class PartnerSerializer(serializers.ModelSerializer):
-    contact_person = ContactPersonSerializer(many=True, required=False)
+    contact_person = ContactPersonSerializer(many=True, required=False, )
 
     class Meta:
         model = Partner
@@ -33,6 +33,15 @@ class PartnerSerializer(serializers.ModelSerializer):
 
         return attrs
 
+    # def create(self, validated_data):
+    #     contact_person_data = validated_data.pop('contact_person', [])
+    #     partner = Partner.objects.create(**validated_data)
+    #
+    #     contact_person_objs = [PartnerContactPerson(partner=partner, **data) for data in contact_person_data]
+    #     PartnerContactPerson.objects.bulk_create(contact_person_objs)
+    #
+    #     return partner
+
     def create(self, validated_data):
         contact_person_data = validated_data.pop('contact_person', None)
         if contact_person_data:
@@ -43,6 +52,7 @@ class PartnerSerializer(serializers.ModelSerializer):
                     person = PartnerContactPerson(**person_data, partner=partner)
                     contact_person_objs.append(person)
                 PartnerContactPerson.objects.bulk_create(contact_person_objs)
+
         else:
             partner = Partner.objects.create(**validated_data)
         return partner
